@@ -1,0 +1,53 @@
+services:
+  app:
+    build: .
+    container_name: my_app_container
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URI: mongodb://mongo:27017/myDatabase
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 54321
+      POSTGRES_DB: myDatabase
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: xN00xJYhLGqQFJKanvVN4O2e39whpWTd
+    depends_on:
+      - mongo
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 54321
+      POSTGRES_DB: myDatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:latest
+    container_name: redis_db
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_PASSWORD: xN00xJYhLGqQFJKanvVN4O2e39whpWTd
+    command: ["redis-server", "--requirepass", "xN00xJYhLGqQFJKanvVN4O2e39whpWTd"]
+
+volumes:
+  postgres_data:
+  mongo_data:
