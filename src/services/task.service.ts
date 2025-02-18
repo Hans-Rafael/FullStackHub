@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { Task } from '../models/mongoose/task.model'
 import { CreateTaskDto } from '../dto/create-task.dto'
+import { UpdateTaskDto } from '../dto/update-task.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Cache } from 'cache-manager'
 
@@ -36,5 +37,21 @@ export class TaskService {
 
   async findAll(): Promise<Task[]> {
     return this.taskModel.find().exec() // Utiliza find para obtener todas las tareas
+  }
+  async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task | null> {
+    const updatedTask = await this.taskModel.findByIdAndUpdate(id, updateTaskDto, { new: true }).exec();
+    if (updatedTask) {
+      await this.cacheManager.del(`task-${id}`); // Invalida la caché para la tarea actualizada
+      await this.cacheManager.set(`task-${id}`, updatedTask, { ttl: 300 } as any); // Almacena la tarea actualizada en caché por 5 minutos
+    }
+    return updatedTask;
+  }
+
+  async remove(id: string): Promise<Task | null> {
+    const deletedTask = await this.taskModel.findByIdAndDelete(id).exec();
+    if (deletedTask) {
+      await this.cacheManager.del(`task-${id}`); // Invalida la caché para la tarea eliminada
+    }
+    return deletedTask;
   }
 }
