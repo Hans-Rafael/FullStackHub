@@ -1,6 +1,3 @@
-¡Por supuesto! Aquí tienes el README en formato Markdown:
-
-```markdown
 # Backend Project
 
 ## Descripción
@@ -121,5 +118,4 @@ Las pruebas end-to-end se encuentran en el directorio `test`.
 
 ## Licencia
 
-Este proyecto está bajo la licencia MIT. Consulta el archivo `LICENSE` para más detalles.
-```
+Este proyecto está bajo la licencia MIT.
