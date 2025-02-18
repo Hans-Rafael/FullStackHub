@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module'
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }), // Para leer las variables de entorno
+    AuthModule,
     // Configuración de PostgreSQL
     SequelizeModule.forRootAsync({
       imports: [ConfigModule],
